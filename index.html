@@ -229,6 +229,45 @@ modalImg.addEventListener('touchend', () => {
   modalImg.style.transform = '';
   modalImg.style.opacity = '';
 });
+// Mobile Swipe Navigation for Grid
+let startX = 0;
+let isSwiping = false;
+
+grid.addEventListener('touchstart', e => {
+  startX = e.touches[0].clientX;
+  isSwiping = true;
+});
+
+grid.addEventListener('touchmove', e => {
+  if(!isSwiping) return;
+  const deltaX = e.touches[0].clientX - startX;
+  grid.style.transform = `translateX(${deltaX}px)`;
+});
+
+grid.addEventListener('touchend', e => {
+  if(!isSwiping) return;
+  const deltaX = e.changedTouches[0].clientX - startX;
+  grid.style.transform = '';
+  isSwiping = false;
+  
+  // Detect swipe threshold (50px)
+  if(deltaX < -50){ // swipe left
+    scrollGrid(1);
+  } else if(deltaX > 50){ // swipe right
+    scrollGrid(-1);
+  }
+});
+
+function scrollGrid(direction){
+  // Scroll by one card width
+  const cardWidth = grid.querySelector('.card').offsetWidth + 24; // include gap
+  grid.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
+  const cards = Array.from(grid.querySelectorAll('.card'));
+cards.forEach(card => card.style.transform = 'scale(1)');
+const visibleIndex = direction > 0 ? 0 : cards.length - 1;
+cards[visibleIndex].style.transform = 'scale(1.05)';
+
+}
 
 </script>
 </body>
