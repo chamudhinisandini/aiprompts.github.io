@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Prompts Hub - Diamond Supreme</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1220;--card:#171a2e;--accent:#7c7cff;--text:#f5f6ff;--muted:#a6a7c7;--btn-hover:#ff7c7c;}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Poppins', 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;color:var(--text);overflow-x:hidden;position:relative;background:var(--bg);}
+
+/* Diamond Background with Particles and Glow */
+.bg-slideshow{position:fixed;inset:0;z-index:-2;width:100%;height:100%;background-size:cover;background-position:center;animation:slideShow 25s infinite linear, pulseBG 12s infinite alternate;filter:brightness(0.75) blur(1px);transition:all 1s ease;}
+@keyframes slideShow{0%{background-image:url('bg1.jpg')}25%{background-image:url('bg2.jpg')}50%{background-image:url('bg3.jpg')}75%{background-image:url('bg4.jpg')}100%{background-image:url('bg1.jpg')}}
+@keyframes pulseBG{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.particles{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(rgba(255,255,255,0.02) 1px,transparent 1px);background-size:40px 40px;animation:particlesMove 25s linear infinite;}
+@keyframes particlesMove{0%{background-position:0 0}100%{background-position:40px 40}}
+
+/* Header Neon Flicker */
+header{text-align:center;padding:24px;animation:headerFloat 2s ease-in-out infinite alternate;}
+@keyframes headerFloat{0%{transform:translateY(0)}100%{transform:translateY(6px)}}
+header h1{margin:0;font-size:2.8rem;animation:flicker 2s infinite;text-shadow:0 0 28px var(--accent),0 0 40px #ff7c7c,0 0 60px #fff;}
+header p{margin-top:6px;color:var(--muted);animation:flicker 2s infinite;}
+@keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,22%,24%,55%{opacity:0.3}}
+
+/* Topbar Glow Buttons */
+.topbar{display:flex;gap:12px;justify-content:center;margin-top:16px;}
+.topbar button{padding:10px 20px;border-radius:999px;border:none;cursor:pointer;background:linear-gradient(145deg,#7c7cff,#ff7c7c);color:#fff;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 36px rgba(124,124,255,0.9),0 0 36px rgba(255,124,124,0.8);transition:all 0.3s ease, text-shadow 0.3s ease, filter 0.3s ease;animation:btnPulse 2s infinite alternate;font-size:1rem;}
+.topbar button.active{transform:scale(1.2);box-shadow:0 18px 50px rgba(124,124,255,1),0 0 40px rgba(255,124,124,1);text-shadow:0 0 20px #fff;}
+@keyframes btnPulse{0%{box-shadow:0 10px 36px rgba(124,124,255,0.8)}50%{box-shadow:0 20px 50px rgba(255,124,124,0.95)}}
+.topbar button:hover{transform:scale(1.15) rotate(-2deg);filter:brightness(1.35);}
+
+/* Controls */
+.controls{display:flex;flex-wrap:wrap;margin-bottom:20px;gap:12px;}
+input, select{flex:1;padding:14px;border-radius:16px;border:none;background:rgba(11,13,26,0.9);color:var(--text);box-shadow:0 0 18px var(--accent);transition:all 0.4s ease;}
+input:focus, select:focus{box-shadow:0 0 55px var(--accent);transform:scale(1.06);}
+
+/* Diamond 3D Cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;}
+.card{background:var(--card);border-radius:28px;overflow:hidden;box-shadow:0 35px 100px rgba(0,0,0,0.9);transition:all .6s ease;cursor:pointer;transform-style:preserve-3d;animation:cardFade 0.8s forwards;opacity:0;}
+.card:hover{transform:rotateY(12deg) rotateX(10deg) translateY(-30px);box-shadow:0 65px 140px rgba(0,0,0,1);filter:brightness(1.35);}
+@keyframes cardFade{0%{transform:translateY(30px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.card img{width:100%;height:240px;object-fit:cover;transition:all 0.8s ease;}
+.card:hover img{transform:scale(1.3) rotateZ(4deg);filter:brightness(1.5) contrast(1.4);}
+.inner{padding:22px;}
+.tag{display:inline-block;background:rgba(124,124,255,.35);color:var(--accent);padding:8px 16px;border-radius:999px;transition:all 0.3s ease;font-size:0.85rem;}
+.card:hover .tag{transform:scale(1.4);background:rgba(124,124,255,0.85);filter:drop-shadow(0 0 20px var(--accent));}
+.card h3{margin:14px 0;transition:all 0.4s ease;font-size:1.1rem;}
+.card:hover h3{color:var(--accent);text-shadow:0 0 20px var(--accent);}
+.actions{display:flex;gap:14px;margin-top:18px;}
+.actions button{flex:1;border:none;border-radius:20px;padding:14px;font-weight:700;cursor:pointer;transition:all 0.5s ease;font-size:0.95rem;}
+.actions button:hover{transform:scale(1.3) rotateZ(-5deg) translateY(-4px);box-shadow:0 22px 45px rgba(255,124,124,0.95);}
+.view{background:linear-gradient(135deg,#7c7cff,#ff7c7c);color:#fff}
+.copy{background:#ffb347;color:#0b0d1a}
+
+/* Diamond Modal */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(5px);}
+.modal.show{display:flex;}
+.modal-content{padding:0;border-radius:20px;max-width:90%;width:auto;animation:modalZoom 0.6s ease forwards;}
+.modal-content img{max-width:100%;max-height:90vh;border-radius:20px;cursor:pointer;transition:all 0.6s ease;}
+@keyframes modalZoom{0%{transform:scale(0.8) rotateX(-12deg);opacity:0}100%{transform:scale(1) rotateX(0);opacity:1}}
+
+/* Toast */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#0b0d1a;padding:18px 28px;border-radius:26px;opacity:0;transition:all .4s ease;box-shadow:0 12px 40px rgba(124,124,255,0.85);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-20px);}
+
+footer{text-align:center;color:var(--muted);padding:26px;}
+.loader{position:fixed;inset:0;background:#0b0d1a;display:flex;align-items:center;justify-content:center;z-index:3000;font-size:1.8rem;color:var(--accent);animation:fadeIn 1s ease forwards;}
+@media(max-width:768px){header h1{font-size:2.2rem}.grid{grid-template-columns:1fr}.card img{height:200px}}
+</style>
+</head>
+<body>
+
+<div class="bg-slideshow"></div>
+<div class="particles"></div>
+<div class="loader" id="loader">Loading Gemini Prompts…</div>
+<header>
+<h1>AI Prompts Hub</h1>
+<p>Explore • Save • Create • Diamond Supreme</p>
+<div class="topbar">
+<button class="tab active" data-tab="all">All</button>
+</div>
+</header>
+
+<div class="container">
+<div class="controls">
+<input id="search" placeholder="Search prompts…" />
+<select id="filter">
+<option value="all">All Groups</option>
+<option value="girls">Girls</option>
+<option value="boys">Boys</option>
+<option value="couple">Couple</option>
+<option value="group">Group</option>
+</select>
+</div>
+<div id="grid" class="grid"></div>
+</div>
+
+<div class="modal" id="modal">
+<div class="modal-content">
+<img id="modalImg" src="" alt="Prompt Image" />
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer>© 2025 AI Prompts Hub - Diamond Supreme</footer>
+
+<script>
+const loader=document.getElementById('loader');
+window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>loader.style.display='none',300));
+setTimeout(()=>loader.style.display='none',2500);
+
+const prompts=[
+{id:0,title:'Sophisticated Girl Portrait',tag:'Gemini Image',group:'girls',img:'girl-portrait.jpg',text:'Create a sophisticated portrait of this young very slim perfect body girl standing gracefully indoors, holding a bouquet of fresh white roses and baby’s breath flowers. Her outfit is a timeless monochrome contrast.'},
+{id:1,title:'Lively Street Girl Portrait',tag:'Gemini Image',group:'girls',img:'street-girl.jpg',text:'Create a lively street-style portrait of this young very curvy slim perfect body girl sitting on a wooden bench against a red brick wall with graffiti. Her outfit is edgy and feminine style.'},
+{id:2,title:'Natural Girl Portrait',tag:'Gemini Image',group:'girls',img:'p1.jpg',text:'Create a serene outdoor portrait of this young very curvy so slim perfect body girl sitting gracefully on a lush green field under soft evening sunlight. She wears a long black off-shoulder dress adorned with delicate red cherry patterns, her wavy auburn-brown hair cascading elegantly over her shoulders. She holds a small bouquet of red flowers in her hands, resting gently in her lap. Beside her lies a chic red handbag that complements the cherry details on her dress. The background features a soft blur of open landscape and trees beneath a pale blue sky, creating a calm and romantic atmosphere. The composition is balanced, with warm lighting that enhances her natural glow and the harmony of red and green tones.'},
+{id:3,title:'Fashion Girl Aesthetic',tag:'Gemini Image',group:'girls',img:'p2.jpg',text:'A stunning, sun-kissed portrait of  this young  very curvy slim perfect body girl on a picturesque Mediterranean island. She wears a vibrant, off-the-shoulder, floral maxi dress and stylish oversized sunglasses. Her hair is styled in natural, beachy waves, and she has a radiant, sun-kissed glow. She is captured mid-laugh, leaning against a whitewashed wall adorned with blooming bougainvillea. In the background, the sparkling turquoise sea and a charming coastal village are visible. The lighting is bright and airy, capturing the intense Mediterranean sun and casting soft, flattering shadows. The overall mood is joyful, relaxed, and carefree. The final portrait should be vibrant and full of life, with rich colors and a sharp focus on her exuberant expression.'},
+{id:4,title:'Party Girl Prom',tag:'Gemini Image',group:'girls',img:'p3.jpg',text:'A striking portrait of  this young  very curvy slim perfect body girl on a high-rise rooftop at twilight, overlooking a glowing city skyline. She is dressed in a sleek black satin evening gown with a thigh-high slit, paired with bold red lipstick and statement earrings. Her hair is styled in glamorous soft curls, and she poses confidently against the glass railing, holding a cocktail glass. The city lights sparkle in the blurred background, creating a cinematic, luxury lifestyle Instagram photo..'},
+{id:5,title:'Indian Style Fantasic',tag:'Gemini Image',group:'girls',img:'p4.jpg',text:'Create a stunning travel portrait of this young  very curvy slim perfect body girl  standing gracefully at an ornate sandstone balcony overlooking the Taj Mahal. She wears a stylish white cropped top paired with a long black skirt featuring elegant turquoise embroidery along the hem. Her dark hair is softly styled, pink lips and she accessorizes with black sunglasses and a wristwatch, exuding a modern, confident charm. She poses calmly against a carved pillar as pigeons take flight around her, adding motion and vitality to the serene backdrop. The iconic marble domes and minarets of the Taj Mahal rise majestically under a bright blue sky, creating a close look perfect blend of architecture, culture, and contemporary fashion.'},
+{id:6,title:'Handsome Boy Background',tag:'Gemini Image',group:'boys',img:'p5.jpg',text:'A photorealistic portrait of the person from the uploaded image. A handsome South Indian man with a neat beard and mustache, wearing a sharp black suit jacket over a crisp white shirt, and black trousers. He is leaning casually against a dark grey wall with his hands in his pockets, looking at the viewer with a friendly smile. The lighting is soft and even, highlighting the textures of his clothing.'},
+{id:7,title:'Mexican Stylish Man',tag:'Gemini Image',group:'boys',img:'p6.jpg',text:'A photorealistic portrait of the person from the uploaded image. A dashing South Indian man with a beard and dark hair, wearing yellow-tinted sunglasses, a stylish white three-piece suit (with an open vest revealing necklaces), and multiple rings and bracelets. He is seated on the back of a red convertible car, smiling and looking to the side. The background features a bright blue sky, the ocean, and a cityscape, suggesting a luxurious coastal setting under clear, sunny weather.'},
+{id:8,title:'Fantasic Vibe Man',tag:'Gemini Image',group:'boys',img:'p7.jpg',text:'Create a retro, vintage-inspired image - grainy yet bright with little sun rays based on the reference picture. The boy should be wearing a light maroon shirt, paired with plated off-white pants styled in a Pinterest-inspired aesthetic. The vibe must capture the essence of a 90s movie dark-brown-haired baddie, hair waving by a windy, romantic atmosphere. Standing under the aesthetic street light and reading a book as a few leaves blow in the air, while dramatic contrasts add mystery and artistry to the scene, creating a moody yet enchanting atmosphere.'},
+{id:9,title:'Stylish Urban Girl',tag:'Gemini Image',group:'girls',img:'p8.jpg',text:'Create a sleek, high-fashion hottie looking portrait of this very curvy slim girl standing confidently in front of a textured concrete wall. She wears an oversized beige trench coat styled with bold sunglasses and pointed heels, her posture sharp and commanding. The background is lit with a warm golden beam cutting across cool shadows, creating a stylish urban editorial look.'},
+{id:10,title:'Dramatic Rain Girl',tag:'Gemini Image',group:'girls',img:'p9.jpg',text:'Create a dramatic fashion portrait of this young very curvy slim perfect body girl standing in the rain at night under a glowing streetlamp. She wears a long black trench coat, her hair slightly wet, and her gaze direct and powerful. The cinematic glow of the light mixes with the raindrops, adding depth, mystery, and cinematic tension.'},
+{id:11,title:'Street Girl Casual',tag:'Gemini Image',group:'girls',img:'p10.jpg',text:'Make a striking editorial portrait of this young very curvy slim perfect body girl against a vibrant graffiti wall. She wears casual denim and a fitted crop top, her pose relaxed but assertive. The colors of the background pop dramatically, while the shallow depth of field keeps her as the sharp, modern focus of the photo.'},
+{id:12,title:'B&W Professinal Girl',tag:'Gemini Image',group:'girls',img:'p11.jpg',text:'Design a bold, monochrome portrait of this young very curvy slim perfect body girl dressed in a tailored all-black power suit. She is seated casually in a modern steel chair against a seamless dark background. A strong single spotlight casts sharp shadows, emphasizing her features with intensity and authority.'},
+{id:13,title:'Traditional Desert Girl',tag:'Gemini Image',group:'girls',img:'p12.jpg',text:'A striking, bohemian-inspired portrait of this young very curvy slim perfect body girl in a vast, golden desert landscape. She wears a flowing, earth-toned maxi dress and a wide-brimmed hat to shield her from the sun. Her hair is windswept and natural, and she is adorned with layered, artisanal jewelry. She stands against a backdrop of sweeping sand dunes and a brilliant blue sky, her silhouette a stark and beautiful contrast to the minimalist landscape. The lighting is the warm, golden glow of the late afternoon sun, casting long, dramatic shadows. The final image should be powerful and evocative, with a sense of freedom and wanderlust.'},
+{id:14,title:'Couple Photo On a Rooftop',tag:'Gemini Image',group:'couple',img:'p13.jpg',text:'A stylish couple including this young very curvy slim perfect body girl stands close together on a modern rooftop at golden hour, with the glowing orange and pink sky stretching behind them. The man wears a crisp black blazer with a white t-shirt and slim trousers, while the woman is in a silky champagne slip dress with her hair softly flowing in the breeze. They are leaning in, foreheads touching, with the city skyline blurred in the background. The photo is shot in portrait orientation with dreamy lens flare, giving a cinematic Instagram look.'},
+{id:15,title:'Holi Couple Photo',tag:'Gemini Image',group:'couple',img:'p14.jpg',text:'A vibrant portrait of the couple including this young very curvy slim perfect body girl during Holi celebrations. The man wears a plain white kurta now splashed with bright colors, while the woman is in a white salwar suit covered in playful Holi powder. They laugh as they throw colors at each other, the background filled with blurred friends and clouds of pink, yellow, and blue powder. The portrait bursts with energy, fun, and celebration.'},
+{id:16,title:'Classic B&W Couple',tag:'Gemini Image',group:'couple',img:'p15.jpg',text:'A dramatic black-and-white portrait of the couple including this young very curvy slim perfect body girl in formal evening wear. The man wears a classic tailored tuxedo, while the woman is in a sleek floor-length gown with open back and statement earrings. They stand close, with his arm around her waist and her hand on his chest, both looking directly at the camera with serious expressions. The background is a blurred grand staircase, giving the vibe of old-Hollywood glamour. High contrast lighting emphasizes their features and makes the shot timeless.'},
+{id:17,title:'Bangladesh Style Couple',tag:'Gemini Image',group:'couple',img:'p16.jpg',text:'The couple including this young very curvy slim perfect body girl poses in front of a grand Rajasthani palace archway. The man is dressed in a deep blue bandhgala suit, while the woman is in a pastel pink saree with heavy silver jewelry. They stand close, with her dupatta flowing in the wind, and the palace’s intricate carvings blurred behind them. The portrait feels royal, romantic, and perfect for luxury Indian Instagram content.'},
+{id:18,title:'Couple Aesthetic Photo',tag:'Gemini Image',group:'couple',img:'p17.jpg',text:'The couple including this young very curvy slim perfect body girl is photographed against a minimalist cream backdrop in a professional studio. The man sits on a wooden stool wearing a tailored black turtleneck and fitted trousers, while the woman leans against him, dressed in a white off-shoulder jumpsuit with sleek makeup and bold eyeliner. Their pose is elegant yet relaxed, with subtle lighting highlighting their features. The portrait is styled like a modern magazine editorial, clean and Instagram-aesthetic.'},
+{id:19,title:'Everest Rocked Couple',tag:'Gemini Image',group:'couple',img:'p18.jpg',text:'An epic and awe-inspiring portrait of an adventurous couple this young very curvy slim perfect body girl locked in a passionate embrace on the summit of a rugged, snow-dusted mountain at sunrise. They are dressed in stylish and practical hiking gear—puffer jackets, beanies, and hiking boots. The wind gently whips through her hair as he lifts her slightly off the ground in a joyful hug. All around them is a breathtaking 360-degree panorama of sharp mountain peaks piercing through a sea of soft morning clouds below. The rising sun paints the sky in vibrant shades of orange, pink, and purple, casting a warm, heroic light upon them. The air is crisp and clear. The photo captures a feeling of exhilaration, freedom, and a love as grand as the landscape. Cinematic wide shot, National Geographic style, hyperrealistic, dramatic lighting, immense scale.'},
+{id:20,title:'Parisian Aesthetic Couple',tag:'Gemini Image',group:'couple',img:'p19.jpg',text:'A beautifully composed, sun-drenched portrait of a chic couple this young very curvy slim perfect body girl on a classic Parisian wrought-iron balcony. It’s a bright morning, and the city of Paris, with the Eiffel Tower faintly visible in the distance, serves as the stunning backdrop. The man is playing a gentle melody on an acoustic guitar for the woman, who is leaning against the balcony railing, looking at him with pure adoration. She is wearing a simple but elegant silk slip dress, and he is in a crisp white shirt with the sleeves rolled up. A small table with a fresh croissant and a cup of coffee sits nearby. The scene is filled with bright, natural light, creating a fresh, airy, and effortlessly romantic atmosphere.'},
+{id:21,title:'Random Couple In Kitchen',tag:'Gemini Image',group:'couple',img:'p20.jpg',text:'A warm and candid portrait of a couple this young very curvy slim perfect body girl playfully cooking together insane romantically in a rustic, sunlit farmhouse kitchen. They are in the middle of baking, with a light dusting of flour on their faces and clothes. He is standing behind her, his arms wrapped around her as they both knead dough on a wooden countertop. They are laughing, their heads close together, sharing a joyful, unposed moment. The kitchen is cozy and charming, with wooden beams, copper pots hanging from a rack, and a large window letting in soft morning light. The atmosphere is filled with authentic happiness and the simple beauty of shared life.'},
+{id:22,title:'Bicycle Driving Couple',tag:'Gemini Image',group:'couple',img:'p21.jpg',text:'A vibrant, sun-drenched  portrait of a laughing couple this young very curvy slim perfect body girl riding a vintage mint-green Vespa down a narrow, cypress-lined country road in Tuscany, Italy. The woman is seated behind the man, her arms wrapped happily around his waist and her head tilted back in a joyful laugh. She is wearing a beautiful floral sundress and oversized sunglasses, with a silk scarf tied in her hair, fluttering in the wind. He is wearing a classic white polo shirt and beige trousers, smiling as he drives. The scene is bathed in the warm, late afternoon Italian sun, creating a golden glow. The background is a picturesque landscape of rolling hills, vineyards, and a distant stone farmhouse. The photo captures a feeling of pure, unadulterated happiness and carefree romance.'},
+
+];
+
+let tab='all';
+const grid=document.getElementById('grid');
+const search=document.getElementById('search');
+const filter=document.getElementById('filter');
+const modal=document.getElementById('modal');
+const modalImg=document.getElementById('modalImg');
+const toast=document.getElementById('toast');
+
+function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1600);}
+function openModal(img){modalImg.src=img; modal.classList.add('show');}
+function closeModal(){modal.classList.remove('show');}
+modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+
+function copyPrompt(text){try {navigator.clipboard.writeText(text).then(()=>showToast('Prompt Copied!'));}catch(err){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Prompt Copied!');}}
+
+function render(){grid.innerHTML='';let list=[...prompts];if(tab!=='all'){list=list.filter(p=>p.tag.toLowerCase()===tab);}const q=search.value.toLowerCase();const f=filter.value;list=list.filter(p=>p.title.toLowerCase().includes(q));if(f!=='all'){list=list.filter(p=>p.group===f);}list.forEach((p,i)=>{const card=document.createElement('div');card.className='card';card.style.animationDelay=`${i*0.1}s`;card.innerHTML=`<img src="${p.img}" alt="${p.title}"><div class="inner"><span class="tag">${p.tag}</span><h3>${p.title}</h3><div class="actions"><button class="view">View</button><button class="copy">Copy</button></div></div>`;card.querySelector('img').onclick=()=>openModal(p.img);card.querySelector('.view').onclick=()=>openModal(p.img);card.querySelector('.copy').onclick=()=>copyPrompt(p.text);grid.appendChild(card);});}
+search.addEventListener('input',render);filter.addEventListener('change',render);
+const tabs=document.querySelectorAll('.tab');tabs.forEach(btn=>{btn.addEventListener('click',()=>{tabs.forEach(b=>b.classList.remove('active'));btn.classList.add('active');tab=btn.dataset.tab;render();});});
+render();
+</script>
+</body>
+</html>
