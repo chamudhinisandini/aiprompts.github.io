@@ -68,6 +68,14 @@ input:focus, select:focus{box-shadow:0 0 55px var(--accent);transform:scale(1.06
 footer{text-align:center;color:var(--muted);padding:26px;}
 .loader{position:fixed;inset:0;background:#0b0d1a;display:flex;align-items:center;justify-content:center;z-index:3000;font-size:1.8rem;color:var(--accent);animation:fadeIn 1s ease forwards;}
 @media(max-width:768px){header h1{font-size:2.2rem}.grid{grid-template-columns:1fr}.card img{height:200px}}
+/* Touch optimization */
+button, .card {
+  -webkit-tap-highlight-color: transparent;
+}
+html {
+  scroll-behavior: smooth;
+}
+
 </style>
 </head>
 <body>
@@ -146,7 +154,13 @@ const modal=document.getElementById('modal');
 const modalImg=document.getElementById('modalImg');
 const toast=document.getElementById('toast');
 
-function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1600);}
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.remove('show'); // reset
+  void toast.offsetWidth; // trigger reflow
+  toast.classList.add('show');   // trigger animation
+  setTimeout(() => toast.classList.remove('show'), 1600);
+}
 function openModal(img){modalImg.src=img; modal.classList.add('show');}
 function closeModal(){modal.classList.remove('show');}
 modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
@@ -154,9 +168,68 @@ modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); })
 function copyPrompt(text){try {navigator.clipboard.writeText(text).then(()=>showToast('Prompt Copied!'));}catch(err){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Prompt Copied!');}}
 
 function render(){grid.innerHTML='';let list=[...prompts];if(tab!=='all'){list=list.filter(p=>p.tag.toLowerCase()===tab);}const q=search.value.toLowerCase();const f=filter.value;list=list.filter(p=>p.title.toLowerCase().includes(q));if(f!=='all'){list=list.filter(p=>p.group===f);}list.forEach((p,i)=>{const card=document.createElement('div');card.className='card';card.style.animationDelay=`${i*0.1}s`;card.innerHTML=`<img src="${p.img}" alt="${p.title}"><div class="inner"><span class="tag">${p.tag}</span><h3>${p.title}</h3><div class="actions"><button class="view">View</button><button class="copy">Copy</button></div></div>`;card.querySelector('img').onclick=()=>openModal(p.img);card.querySelector('.view').onclick=()=>openModal(p.img);card.querySelector('.copy').onclick=()=>copyPrompt(p.text);grid.appendChild(card);});}
-search.addEventListener('input',render);filter.addEventListener('change',render);
+search.addEventListener('input', () => { render(); lazyLoadImages(); });
+filter.addEventListener('change', () => { render(); lazyLoadImages(); });
 const tabs=document.querySelectorAll('.tab');tabs.forEach(btn=>{btn.addEventListener('click',()=>{tabs.forEach(b=>b.classList.remove('active'));btn.classList.add('active');tab=btn.dataset.tab;render();});});
+render()
+// Animate cards fade out before re-render
+grid.querySelectorAll('.card').forEach(card => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(20px)';
+});
+
+// Lazy-load images with blur effect
+const lazyLoadImages = () => {
+  const imgs = document.querySelectorAll('.grid img');
+  imgs.forEach(img => {
+    img.classList.add('lazy-img'); // initial blurred style
+    img.onload = () => img.classList.add('loaded'); // remove blur when loaded
+    img.src = img.src; // trigger loading
+  });
+}
+// Animate fade-in for new cards
+const newCards = grid.querySelectorAll('.card');
+newCards.forEach((card, i) => {
+  setTimeout(() => {
+    card.style.opacity = '1';
+    card.style.transform = 'translateY(0)';
+  }, i * 100);
+});
+
+// Call after render
 render();
+lazyLoadImages();
+;
+/* =====================
+   MOBILE SWIPE TO CLOSE MODAL
+   ===================== */
+let startY = 0;
+
+modalImg.addEventListener('touchstart', (e) => {
+  startY = e.touches[0].clientY;
+});
+
+modalImg.addEventListener('touchmove', (e) => {
+  const currentY = e.touches[0].clientY;
+  const diff = currentY - startY;
+
+  if (diff > 0) {
+    modalImg.style.transform = `translateY(${diff}px) scale(0.95)`;
+    modalImg.style.opacity = 1 - diff / 400;
+  }
+
+  if (diff > 180) {
+    closeModal();
+    modalImg.style.transform = '';
+    modalImg.style.opacity = '';
+  }
+});
+
+modalImg.addEventListener('touchend', () => {
+  modalImg.style.transform = '';
+  modalImg.style.opacity = '';
+});
+
 </script>
 </body>
 </html>
